@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 
 from habits.models import Habit
@@ -22,8 +22,8 @@ class HabitViewSet(ModelViewSet):
         habit.save()
 
     def get_permissions(self):
-        if self.action != "create":
-            self.permission_classes = [IsOwner]
+        if self.action in ["retrieve", "update", "destroy"]:
+            self.permission_classes = [IsOwner | IsAdminUser]
         return super().get_permissions()
 
 
